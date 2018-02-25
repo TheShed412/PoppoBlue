@@ -6,6 +6,12 @@
 #include <bluetooth/hci.h>
 #include <bluetooth/hci_lib.h>
 
+void print_bluetooth_info(int sock, inquiry_info* ii, char* name, char* addr) {
+	if (hci_read_remote_name(sock, &(ii+i)->bdaddr, sizeof(name), name, 0) < 0)
+        	strcpy(name, "[unknown]");
+        printf("%s  %s\n", addr, name);
+}
+
 int main(int argc, char **argv)
 {
     inquiry_info *ii = NULL;
@@ -33,13 +39,14 @@ int main(int argc, char **argv)
     for (i = 0; i < num_rsp; i++) {
         ba2str(&(ii+i)->bdaddr, addr);
         memset(name, 0, sizeof(name));
-        if (hci_read_remote_name(sock, &(ii+i)->bdaddr, sizeof(name), 
-            name, 0) < 0)
-        strcpy(name, "[unknown]");
-        printf("%s  %s\n", addr, name);
+        
     }
 
     free( ii );
     close( sock );
     return 0;
 }
+
+
+
+
